@@ -18,7 +18,7 @@ async fn main() {
       "2" => {
         let post_id_input = get_input(&"Please enter a post id");
         match post_id_input.trim().parse::<u8>() {
-          Ok(post_id) => get_post(Some(&post_id)).await,
+          Ok(post_id) => get_post(&post_id).await,
           Err(_) => println!("Post ID not recognized.")
         }
       },
@@ -39,18 +39,8 @@ fn get_input(prompt: &str) -> String {
   input.trim().to_string()
 }
 
-async fn get_post(id: Option<&u8>) {
-  // id is an optional param, so we need to handle the case where no id is
-  let real_id: &u8;
-  match id {
-    Some(real) => real_id = real,
-    None => {
-      // TODO: replace with logic to figure out what post the user wants to see
-      real_id = &1;
-    }
-  }
-
-  let post_resp = posts::get(real_id).await;
+async fn get_post(id: &u8) {
+  let post_resp = posts::get(id).await;
   match post_resp {
     Ok(post) => {
       println!("--------------------------------------------------------------------");
